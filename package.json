@@ -1,7 +1,7 @@
 {
-  "name": "api-typeorm-projectn",
+  "name": "Product-Distribution-System",
   "version": "0.0.1",
-  "description": "Awesome project developed with TypeORM.",
+  "description": "Product-Distribution-System using express and typeorm",
   "type": "commonjs",
   "devDependencies": {
     "@types/bcrypt": "^6.0.0",
