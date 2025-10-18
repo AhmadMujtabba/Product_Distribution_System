@@ -13,7 +13,7 @@ import {
 import { userRoles } from "../enum/userroles.enum";
 import { Admin } from "./Admin";
 import { Retailer } from "./Retailer";
-import {Encrypt} from "../helpers/encrypt.helper";
+import { Encrypt } from "../helpers/encrypt.helper";
 
 @Entity({ name: "users" })
 export class User {
@@ -32,7 +32,7 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ type: "enum", enum: userRoles, default: userRoles.USER })
+  @Column({ type: "enum", enum: userRoles, default: userRoles.STAFF })
   role: userRoles;
 
   @Column({ default: false })
@@ -57,11 +57,12 @@ export class User {
   @OneToOne(() => Admin, (admin) => admin.user, { cascade: ["insert"] })
   admin: Admin;
 
-  @OneToMany(() => Retailer, (retailer) => retailer.user, { cascade: ["insert"] })
+  @OneToMany(() => Retailer, (retailer) => retailer.user, {
+    cascade: ["insert"],
+  })
   retailer: Retailer;
   // @BeforeInsert()
   // async hashPassword() {
   //   this.password = await Encrypt.hashPassword(this.password);
   // }
 }
-
