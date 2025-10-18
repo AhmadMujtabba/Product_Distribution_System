@@ -21,6 +21,9 @@ export class Retailer {
   @Column({ nullable: false })
   address: String;
 
+  @Column({ nullable: false })
+  created_by: number;
+
   @CreateDateColumn()
   created_at: Date;
 

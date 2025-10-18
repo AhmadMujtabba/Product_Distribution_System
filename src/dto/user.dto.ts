@@ -1,31 +1,33 @@
-import { IsNotEmpty,IsEmail,IsStrongPassword ,MinLength,MaxLength, IsNumber, IsDefined} from "class-validator";
+import {
+  IsNotEmpty,
+  IsEmail,
+  IsNumber,
+  IsDefined,
+  IsOptional,
+  IsEnum,
+} from "class-validator";
+import { userRoles } from "../enum/userroles.enum";
 
+export class userDto {
+  @IsDefined({ message: "Name is required" })
+  @IsNotEmpty()
+  name: string;
 
-export class userDto{
+  @IsDefined({ message: "Email is required" })
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
 
-    @IsDefined({message:"First name is required"})
-    firstname:string;
+  @IsDefined({ message: "Password is required" })
+  @IsNotEmpty()
+  password: string;
 
-    @IsDefined({message:"Last name is required"})
-    lastname:string;
+  @IsDefined({ message: "Mobile number is required" })
+  @IsNotEmpty()
+  @IsNumber()
+  mobile: number;
 
-    @IsDefined({message:"Email is required"})
-    @IsEmail()
-    email:string;
-
-    // @IsNotEmpty({ message: "OTP is required" })
-    // @IsNumber()
-    // otp:number
-
-    @IsDefined({message:"Password is required"})
-    @MinLength(5)
-    @MaxLength(20)
-    @IsStrongPassword({
-        minUppercase:1,
-        minLowercase:1,
-        minNumbers:1,
-        minSymbols:1
-    },{message:"Password must contain at least one uppercase letter, one lowercase letter, one number and one symbol"})
-    password:string;
-
+  @IsOptional()
+  @IsEnum(userRoles, { message: "Role is invalid" })
+  role: userRoles;
 }
