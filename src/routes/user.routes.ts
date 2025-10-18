@@ -12,7 +12,4 @@ const router=express.Router();
   router.put("/updateuser/:id",UserController.updateUser)
   router.delete("/deleteuser/:id",UserController.deleteUser)
 
-  router.get("/user" ,(req:Request,res:Response)=>{
-    res.send("Hello World!")
-});
 export  {router as userRouter};

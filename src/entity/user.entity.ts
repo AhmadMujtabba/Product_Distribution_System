@@ -28,6 +28,9 @@ export class User {
   role: userRoles;
 
   @Column({ nullable: false })
+  password: string;
+
+  @Column({ nullable: false })
   mobile: number;
 
   @Column({ nullable: true })
