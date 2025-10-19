@@ -1,54 +1,39 @@
 import { Repository } from "typeorm";
-import { User } from "../entity/User";
-import {Encrypt} from "../helpers/encrypt.helper";
-import { Retailer } from "../entity/Retailer";
+import { Retailer } from "../entity/retailer.entity";
 
 export class retailerService {
-    constructor(private retailerRepository: Repository<Retailer>) { }
+  constructor(private retailerRepository: Repository<Retailer>) {}
 
-    async findAll(): Promise<Retailer[]>//This function will return a Promise that resolves to an array of User objects.
-    {
-        return await this.retailerRepository.find();
+  async findAll(): Promise<Retailer[]> {
+    return await this.retailerRepository.find({ relations: ["created_by"] });
+  }
+
+  async findById(id: number): Promise<Retailer | null> {
+    return await this.retailerRepository.findOne({ where: { id } });
+  }
+
+  async createRetailer(retailer: Retailer): Promise<Retailer> {
+    const newretailer = this.retailerRepository.create(retailer);
+    return await this.retailerRepository.save(newretailer);
+  }
+
+  async updateRetailer(
+    id: number,
+    retailerData: Partial<Retailer>
+  ): Promise<Retailer | null> {
+    const retailer = await this.retailerRepository.findOneBy({ id });
+    if (!retailer) {
+      throw new Error("Retailer not found");
     }
-
-    // async findByEmail(email: string): Promise<Retailer | null> {
-    //     return this.retailerRepository.findOneBy({ email });
-    // }
-
-    async findById(id: number): Promise<Retailer | null> {
-        return await this.retailerRepository.findOne( {where:{id}});
-    }
-    async creteRetailer(retailer: Retailer): Promise<Retailer> {
-        const newretailer = this.retailerRepository.create(retailer);
-        return await this.retailerRepository.save(newretailer);
-    }
-
-    ////  Add this method to save updated fields
-    async saveRetailer(retailer: Retailer): Promise<Retailer> {
+    this.retailerRepository.merge(retailer, retailerData);
     return await this.retailerRepository.save(retailer);
+  }
+
+  async deleteRetailer(id: number): Promise<boolean> {
+    const user = await this.retailerRepository.delete({ id });
+    if (user.affected === 0) {
+      return false;
     }
-
-
-    async updateRetailer(id: number, userData: Partial<Retailer>): Promise<Retailer | null> {
-        const user = await this.retailerRepository.findOneBy({ id });
-        if (!user) {
-            throw new Error("retailer not found");
-            // return null;
-        }
-        this.retailerRepository.merge(user, userData);
-        return await this.retailerRepository.save(user);
-    }
-
-    async deleteRetailer(id: number): Promise<boolean> {
-        const user = await this.retailerRepository.delete({ id });
-        // if(user.affected===0){
-        //     return false;
-        // }
-        // return true;
-
-        return user.affected !== 0;
-        // affected = number of rows actually deleted.
-        // If at least 1 row was deleted → returns true.
-        // If 0 rows were deleted (meaning no user with that ID exists) → returns false.
-    }
+    return true;
+  }
 }
