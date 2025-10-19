@@ -32,7 +32,7 @@ export class User {
   password: string;
 
   @Column({ nullable: false })
-  mobile: number;
+  mobile: string;
 
   @Column({ nullable: true })
   otp: number;

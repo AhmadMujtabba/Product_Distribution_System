@@ -1,13 +1,10 @@
 import * as express from "express";
-import { Request, Response } from "express";
 import { authController } from "../controllers/auth.controller";
-import { loginDto, userDto, resetPasswordDto } from "../dto/index";
-import { validator, authentication, authorization } from "../middleware/index";
-import { userRoles } from "../enum/userroles.enum";
-import { retailerController } from "../controllers/retailer.controller";
+import { loginDto } from "../dto/index";
+import { validator } from "../middleware/index";
 const router = express.Router();
 
-router.post("/login",validator(loginDto),authController.loginUser)
+router.post("/login", validator(loginDto), authController.loginUser);
 // router.post("/register",validator(userDto),authController.createUser)
 // router.post("/verifyotp",authController.verifyOtp)
 // router.post("/resendotp",authController.resendOtp)

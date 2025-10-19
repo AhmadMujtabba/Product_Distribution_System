@@ -19,7 +19,7 @@ export class Retailer {
   name: String;
 
   @Column({ nullable: false })
-  mobile: number;
+  mobile: string;
 
   @Column({ nullable: false })
   address: String;

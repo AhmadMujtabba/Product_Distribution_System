@@ -24,8 +24,7 @@ export class userDto {
 
   @IsDefined({ message: "Mobile number is required" })
   @IsNotEmpty()
-  @IsNumber()
-  mobile: number;
+  mobile: string;
 
   @IsOptional()
   @IsEnum(userRoles, { message: "Role is invalid" })
