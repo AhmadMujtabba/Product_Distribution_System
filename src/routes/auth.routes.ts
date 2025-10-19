@@ -1,13 +1,13 @@
-// import * as express from "express";
-// import { Request, Response } from "express";
-// import { authController } from "../controllers/auth.controller";
-// import { loginDto, userDto, resetPasswordDto } from "../dto/index";
-// import { validator, authentication, authorization } from "../middleware/index";
-// import { userRoles } from "../enum/userroles.enum";
-// import { retailerController } from "../controllers/retailer.controller";
-// const router = express.Router();
+import * as express from "express";
+import { Request, Response } from "express";
+import { authController } from "../controllers/auth.controller";
+import { loginDto, userDto, resetPasswordDto } from "../dto/index";
+import { validator, authentication, authorization } from "../middleware/index";
+import { userRoles } from "../enum/userroles.enum";
+import { retailerController } from "../controllers/retailer.controller";
+const router = express.Router();
 
-// router.post("/login",validator(loginDto),authController.loginUser)
+router.post("/login",validator(loginDto),authController.loginUser)
 // router.post("/register",validator(userDto),authController.createUser)
 // router.post("/verifyotp",authController.verifyOtp)
 // router.post("/resendotp",authController.resendOtp)
@@ -20,4 +20,4 @@
 //   router.get("/user" ,(req:Request,res:Response)=>{
 //     res.send("Hello World!")
 // });
-// export { router as authRouter };
+export { router as authRouter };

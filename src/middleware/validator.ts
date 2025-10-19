@@ -3,11 +3,8 @@ import { validate, ValidationError } from "class-validator";
 import { Request, Response, NextFunction } from "express";
 
 export const validator = (dtoClass: any) => {
-  console.log("inside validator function");
   return async (req: Request, res: Response, next: NextFunction) => {
-    console.log("req", req.body);
     const userDto = plainToInstance(dtoClass, req.body);
-    console.log("userDto", userDto);
 
     const errors: ValidationError[] = await validate(userDto);
 

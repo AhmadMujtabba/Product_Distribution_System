@@ -8,6 +8,7 @@ import {
 } from "typeorm";
 import { userRoles } from "../enum/userroles.enum";
 import { Order } from "./order.entity";
+import { Retailer } from "./retailer.entity";
 @Entity({ name: "users" })
 export class User {
   @PrimaryGeneratedColumn()
@@ -50,4 +51,7 @@ export class User {
 
   @OneToMany(() => Order, (order) => order.order_by)
   orders: Order[];
+
+  @OneToMany(() => Retailer, (retailer) => retailer.created_by)
+  retailers: Retailer[];
 }

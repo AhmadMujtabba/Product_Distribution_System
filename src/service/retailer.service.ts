@@ -5,7 +5,7 @@ export class retailerService {
   constructor(private retailerRepository: Repository<Retailer>) {}
 
   async findAll(): Promise<Retailer[]> {
-    return await this.retailerRepository.find();
+    return await this.retailerRepository.find({ relations: ["created_by"] });
   }
 
   async findById(id: number): Promise<Retailer | null> {
