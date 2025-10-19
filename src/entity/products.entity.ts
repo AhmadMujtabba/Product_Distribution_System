@@ -21,8 +21,8 @@ export class Product {
   @Column({ nullable: false })
   company: string;
 
-  @Column({ nullable: false })
-  stock: string;
+  @Column({ nullable: false, default: 0 })
+  stock: number;
 
   @CreateDateColumn()
   created_at: Date;

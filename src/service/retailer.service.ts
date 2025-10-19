@@ -9,7 +9,10 @@ export class retailerService {
   }
 
   async findById(id: number): Promise<Retailer | null> {
-    return await this.retailerRepository.findOne({ where: { id } });
+    return await this.retailerRepository.findOne({
+      where: { id },
+      relations: ["created_by"],
+    });
   }
 
   async createRetailer(retailer: Retailer): Promise<Retailer> {

@@ -5,6 +5,7 @@ import errorHandler from "./middleware/errorHandler";
 import { userRouter } from "./routes/user.routes";
 import { authRouter } from "./routes/auth.routes";
 import { retailerRouter } from "./routes/retailer.routes";
+import { productRouter } from "./routes/product.routes";
 
 const app = express();
 const port = process.env.PORT;
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/v1/", userRouter);
 app.use("/v1/", authRouter);
 app.use("/v1/", retailerRouter);
+app.use("/v1/", productRouter);
 //-----------------------------
 
 app.use(errorHandler);

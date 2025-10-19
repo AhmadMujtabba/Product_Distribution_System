@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from "express";
 import { userRepository } from "../repository/Repository";
 
-export const authorization = (roles: string[]) => {
+export const roleAuthorization = (role: string) => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    // const user = req.headers["user"] as any;
     const user = (req as any).user;
     const userData = await userRepository.findById(user.id);
 
-    if (userData && !roles.includes(userData.role)) {
-      return res
-        .status(403)
-        .json({ message: "ForbiddenForbidden: Access denied" });
+    if (userData.role !== role) {
+      return res.status(403).json({
+        message: `Forbidden: ${userData.role} do not have access to this resource`,
+      });
     }
     next();
   };

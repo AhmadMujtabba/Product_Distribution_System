@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import handleresponse from "../utils/utils";
-import { userRepository } from "../repository/user.Repository";
+import { userRepository } from "../repository/Repository";
 import { UserResponseDto } from "../dto/userresponse.dto";
 import { Encrypt } from "../helpers/encrypt.helper";
 import { sendMail } from "../helpers/nodemailer.helper";
