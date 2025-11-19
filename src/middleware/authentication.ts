@@ -6,15 +6,11 @@ export const authentication = (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader) {
+  const authToken = req.cookies.token;
+  if (!authToken) {
     return res.status(401).json({ message: "Access denied" });
   }
-  const token = authHeader && authHeader.split(" ")[1];
-  if (!token) {
-    return res.status(401).json({ message: "Access denied" });
-  }
-  const decoded = Encrypt.verifyToken(token);
+  const decoded = Encrypt.verifyToken(authToken);
   if (!decoded) {
     return res.status(403).json({ message: "Invalid or expired token" });
   }

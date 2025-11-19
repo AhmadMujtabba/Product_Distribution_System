@@ -7,7 +7,7 @@ const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, EMAIL_USER, EMAIL_PASS } =
 
 const transporter = nodemailer.createTransport({
   host: SMTP_HOST,
-  port: Number(SMTP_PORT) || 2525,
+  port: Number(SMTP_PORT),
   secure: false, // true for 465, false for other ports
   auth: {
     user: SMTP_USER,
@@ -23,15 +23,11 @@ const transporter = nodemailer.createTransport({
 //   },
 // });
 
-export const sendMail = async ({
-  to,
-  subject,
-  text,
-}: {
-  to: string;
-  subject: string;
-  text: string;
-}): Promise<void> => {
+export const sendMail = async (
+  to:string,
+  subject:string,
+  text:string,
+): Promise<void> => {
   try {
     await transporter.sendMail({
       from: `"Support Team" <${SMTP_USER}>`,

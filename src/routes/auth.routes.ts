@@ -5,6 +5,9 @@ import { validator } from "../middleware/index";
 const router = express.Router();
 
 router.post("/login", validator(loginDto), authController.loginUser);
+router.post("/verifyotp", authController.verifyOtp);
+router.post("/forgotpassword", authController.forgotPassword);
+router.post("/resetpassword", authController.resetPassword);
 // router.post("/register",validator(userDto),authController.createUser)
 // router.post("/verifyotp",authController.verifyOtp)
 // router.post("/resendotp",authController.resendOtp)

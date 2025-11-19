@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import handleresponse from "../utils/utils";
 import { userRepository } from "../repository/Repository";
 import { Encrypt } from "../helpers/encrypt.helper";
+import { sendMail } from "../helpers/nodemailer.helper";
 
 export class UserController {
   static async getallUser(req: Request, res: Response) {
@@ -10,8 +11,15 @@ export class UserController {
   }
 
   static async createUser(req: Request, res: Response) {
-    const user = await userRepository.createUser(req.body);
-    handleresponse(res, 201, "User Created", user);
+    const otp = await Encrypt.generateOtp();
+    const otp_valid = await Encrypt.generateOtpValidTill();
+    const userdata = { ...req.body, otp: otp, otp_expiry: otp_valid };
+    console.log(userdata);
+    const user = await userRepository.createUser(userdata);
+    if (user) {
+      await sendMail(user.email, "OTP", userdata.otp.toString());
+      handleresponse(res, 201, "User Created", user);
+    }
   }
 
   static async getUserById(req: Request, res: Response) {

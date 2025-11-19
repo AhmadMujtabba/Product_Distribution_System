@@ -39,11 +39,11 @@ export class OrderItems {
   @UpdateDateColumn()
   updated_at: Date;
 
-  @BeforeInsert()
-  setUnitPriceFromProduct() {
-    if (this.product) {
-      this.unit_price = this.product.unit_price;
-      this.total_price = this.product.unit_price * this.quantity;
-    }
-  }
+  // @BeforeInsert()
+  // setUnitPriceFromProduct() {
+  //   if (this.product) {
+  //     this.unit_price = this.product.unit_price;
+  //     this.total_price = this.product.unit_price * this.quantity;
+  //   }
+  // }
 }

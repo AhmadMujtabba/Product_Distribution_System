@@ -18,7 +18,7 @@ export class Order {
   id: number;
 
   @Column({ nullable: false })
-  order_date: Date;
+  order_date: Date = new Date();
 
   @Column({ type: "enum", enum: orderStatus, default: orderStatus.PENDING })
   order_status: orderStatus;

@@ -11,4 +11,5 @@ router.get("/getuser/:id", UserController.getUserById);
 router.put("/updateuser/:id", UserController.updateUser);
 router.delete("/deleteuser/:id", UserController.deleteUser);
 
+
 export { router as userRouter };
