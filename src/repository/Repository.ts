@@ -23,6 +23,7 @@ export const productRepository = new productService(
 export const orderRepository = new orderService(
   datasource.getRepository(Order),
   datasource.getRepository(OrderItems),
+  datasource.getRepository(Product),
   datasource
 );
 
