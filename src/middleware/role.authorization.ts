@@ -8,7 +8,7 @@ export const roleAuthorization = (role: string) => {
 
     if (userData.role !== role) {
       return res.status(403).json({
-        message: `Forbidden: ${userData.role} do not have access to this resource`,
+        message: `Forbidden: You do not have access to this resource`,
       });
     }
     next();

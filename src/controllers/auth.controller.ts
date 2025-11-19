@@ -109,34 +109,34 @@ export class authController {
   //   handleresponse(res, 201, "User Created Successfully",{user:new UserResponseDto(user)} )
   // }
 
-  // static async verifyOtp(req: Request, res: Response) {
-  //   const { email, otp } = req.body;
-  //   if (!email || !otp) {
-  //     handleresponse(res, 400, "Email and OTP are required");
-  //   }
-  //   const user = await userRepository.findByEmail(email);
-  //   if (user) {
-  //     if (user.isVerified) {
-  //       handleresponse(res, 400, "User Already Verified", user);
-  //     }
-  //     if (user.otp !== Number(otp)) {
-  //       handleresponse(res, 400, "Invalid OTP", null);
-  //     }
-  //     if (new Date() > new Date(user.otpValidTill)) {
-  //       handleresponse(res, 400, "OTP Expired", null);
-  //     }
-  //     if (user.otp == Number(otp)&&new Date()<=new Date(user.otpValidTill)) {
-  //     const updateuser = await userRepository.updateUser(user.id, {
-  //       isVerified: true,
-  //   });
-  //     handleresponse(res, 200, "Otp Verified Successfully", updateuser)
-  //   }else{
-  //     handleresponse(res, 400, "OTP Verification Failed");
-  //   }
-  // } else {
-  //   handleresponse(res, 404, "User Not Found", null);
-  // }
-  // }
+  static async verifyOtp(req: Request, res: Response) {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      handleresponse(res, 400, "Email and OTP are required");
+    }
+    const user = await userRepository.findByEmail(email);
+    if (user) {
+      if (user.verification_status) {
+        handleresponse(res, 400, "User Already Verified", user);
+      }
+      if (user.otp !== Number(otp)) {
+        handleresponse(res, 400, "Invalid OTP", null);
+      }
+      if (new Date() > new Date(user.otp_expiry)) {
+        handleresponse(res, 400, "OTP Expired", null);
+      }
+      if (user.otp == Number(otp) && new Date() <= new Date(user.otp_expiry)) {
+        const updateuser = await userRepository.updateUser(user.id, {
+          verification_status: true,
+        });
+        handleresponse(res, 200, "Otp Verified Successfully", updateuser);
+      } else {
+        handleresponse(res, 400, "OTP Verification Failed");
+      }
+    } else {
+      handleresponse(res, 404, "User Not Found", null);
+    }
+  }
 
   // static async resendOtp(req: Request, res: Response) {
   //   const { email } = req.body;
@@ -186,11 +186,13 @@ export class authController {
       const payload = { id: user.id };
       const token = await Encrypt.generateToken(payload);
       const refreshToken = await Encrypt.generateRefreshToken(payload);
-      handleresponse(res, 200, "Login Successfully", {
-        user,
-        token,
-        refreshToken,
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "lax",
+        secure: false,
       });
+      const { password: _, ...userData } = user;
+      handleresponse(res, 200, "Login Successfully", userData);
     } else {
       handleresponse(res, 404, "User Not Found");
     }
@@ -220,6 +222,45 @@ export class authController {
       res.status(200).json({ token: newToken, refreshToken: newRefreshToken });
     } catch (error) {
       res.status(401).json({ message: "Invalid refresh token" });
+    }
+  }
+
+  static async forgotPassword(req: Request, res: Response) {
+    const user = await userRepository.findByEmail(req.body.email);
+    if (user) {
+      const otp = await Encrypt.generateOtp();
+      const otp_valid = await Encrypt.generateOtpValidTill();
+      const payload = { otp: otp, otp_expiry: otp_valid };
+      const updatedOtp = await userRepository.updateUser(user.id, payload);
+      await sendMail(
+        user.email,
+        "Reset Password OTP",
+        updatedOtp.otp.toString()
+      );
+      handleresponse(res, 200, "Otp Generated", updatedOtp);
+    } else {
+      handleresponse(res, 404, "Email does not exist", null);
+    }
+  }
+  static async resetPassword(req: Request, res: Response) {
+    const user = await userRepository.findByEmail(req.body.email);
+    console.log(req.body);
+    if (user) {
+      const userotp = Number(req.body.otp);
+
+      if (userotp === Number(user.otp) && new Date() <= user.otp_expiry) {
+        console.log(userotp, user.otp);
+        const hashpassword = await Encrypt.hashPassword(req.body.password);
+        const payload = { password: hashpassword };
+        await userRepository.updateUser(user.id, payload);
+        handleresponse(res, 200, "Password Updated", user.email);
+      } else {
+        console.log("inside inner else");
+        handleresponse(res, 401, "Invalid or expired token", user.email);
+      }
+    } else {
+      console.log("inside outer else");
+      handleresponse(res, 404, "Email does not exist", null);
     }
   }
 

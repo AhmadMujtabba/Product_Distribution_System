@@ -5,7 +5,6 @@ dotenv.config();
 const { JWT_SECRET = "", SALT_ROUNDS } = process.env;
 
 export class Encrypt {
-  
   static async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt(Number(SALT_ROUNDS));
     return bcrypt.hashSync(password, salt);
@@ -33,5 +32,13 @@ export class Encrypt {
       console.error("Token verification failed:", error);
       return null;
     }
+  }
+
+  static async generateOtp(): Promise<number> {
+    return Math.floor(100000 + Math.random() * 900000);
+  }
+
+  static async generateOtpValidTill(): Promise<Date> {
+    return new Date(Date.now() + 5 * 60 * 1000); // valid for 5 minutes
   }
 }
